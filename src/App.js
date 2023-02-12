@@ -3,9 +3,10 @@ import "./App.css";
 import Form from "./components/Form";
 import List from "./components/Lists";
 
+const initialTodoData = localStorage.getItem('todoData') ? JSON.parse(localStorage.getItem('todoData')) : [];
+
 export default function App() {
-    console.log("App component")
-    const [todoData, setTodoData] = useState([]);
+    const [todoData, setTodoData] = useState(initialTodoData);
     const [value, setValue] = useState("");
 
     const handleSubmit = (e) => {
@@ -21,16 +22,19 @@ export default function App() {
 
         // 원래 있던 state에 newTodo를 추가하기
         setTodoData(prev => [...prev, newTodo]);
+        localStorage.setItem('todoData', JSON.stringify([...todoData, newTodo]));
         setValue("");
     }
 
     const handleClick = useCallback((id) => {
         let newTodoData = todoData.filter(data => data.id !== id);
         setTodoData(newTodoData);
+        localStorage.setItem('todoData', JSON.stringify(newTodoData));
     }, [todoData]);
 
     const handleRemoveClick = () => {
         setTodoData([]);
+        localStorage.setItem('todoData', JSON.stringify([]));
     }
 
     return (
